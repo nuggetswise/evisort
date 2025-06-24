@@ -125,13 +125,6 @@ def main():
         else:
             st.success("✅ **AI Mode**")
             st.markdown("Real AI analysis enabled!")
-        
-        st.markdown("### 📞 Support")
-        st.markdown("""
-        For questions or support:
-        - Email: support@evisort.com
-        - Phone: (555) 123-4567
-        """)
     
     # Main content area
     col1, col2 = st.columns([2, 1])
