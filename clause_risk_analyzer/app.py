@@ -98,11 +98,6 @@ def main():
         - Confidence scoring
         - Detailed explanations
         
-        📊 **Extract Metadata**
-        - Key dates and terms
-        - Financial information
-        - Legal provisions
-        
         💡 **Provide Recommendations**
         - Actionable insights
         - Risk mitigation strategies
@@ -113,8 +108,7 @@ def main():
         st.markdown("""
         1. **Enter Clause Text** - Paste your contract clause
         2. **Analyze Risk** - Get AI-powered risk assessment
-        3. **Extract Metadata** - Identify key terms and dates
-        4. **Review Results** - Understand implications and next steps
+        3. **Review Results** - Understand implications and next steps
         """)
         
         # Demo mode indicator
@@ -149,11 +143,6 @@ def main():
             
             st.markdown("---")
             
-            # Metadata extraction
-            metadata_extractor()
-            
-            st.markdown("---")
-            
             # Compliance analysis
             compliance_checker()
     
@@ -177,9 +166,8 @@ def main():
                 if st.button("Try", key=f"sample_{title}", help=f"Load {title} sample"):
                     st.session_state.clause_text = clause
                     st.rerun()
-            
-            # Add some spacing between samples
-            st.markdown("<br>", unsafe_allow_html=True)
+            # Reduce space between rows
+            st.markdown("<div style='margin-bottom: 0.2rem;'></div>", unsafe_allow_html=True)
         
         # Sample data download section
         st.markdown("---")
@@ -191,11 +179,18 @@ def main():
         - Financial and time-based clauses
         """)
         
-        # Read the sample file and create download button
-        try:
-            with open('sample_clauses.md', 'r') as file:
-                sample_data = file.read()
-            
+        # Robust sample file path
+        sample_file_paths = [
+            os.path.join(os.getcwd(), 'sample_clauses.md'),
+            os.path.join(os.getcwd(), 'clause_risk_analyzer', 'sample_clauses.md')
+        ]
+        sample_data = None
+        for path in sample_file_paths:
+            if os.path.exists(path):
+                with open(path, 'r') as file:
+                    sample_data = file.read()
+                break
+        if sample_data:
             st.download_button(
                 label="📥 Download Sample Clauses",
                 data=sample_data,
@@ -203,7 +198,7 @@ def main():
                 mime="text/markdown",
                 help="Download comprehensive sample clauses for testing"
             )
-        except FileNotFoundError:
+        else:
             st.info("📄 Sample data file not found")
 
 if __name__ == "__main__":
