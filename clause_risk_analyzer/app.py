@@ -132,30 +132,6 @@ def main():
         else:
             st.success("✅ **AI Mode**")
             st.markdown("Real AI analysis enabled!")
-        
-        # Sample data download link
-        st.markdown("### 📄 Sample Data")
-        st.markdown("""
-        Download comprehensive sample clauses for testing:
-        - 20+ clauses across all risk levels
-        - Compliance-focused examples
-        - Financial and time-based clauses
-        """)
-        
-        # Read the sample file and create download button
-        try:
-            with open('sample_clauses.md', 'r') as file:
-                sample_data = file.read()
-            
-            st.download_button(
-                label="📥 Download Sample Clauses",
-                data=sample_data,
-                file_name="sample_contract_clauses.md",
-                mime="text/markdown",
-                help="Download comprehensive sample clauses for testing"
-            )
-        except FileNotFoundError:
-            st.info("📄 Sample data file not found")
     
     # Main content area
     col1, col2 = st.columns([2, 1])
@@ -182,53 +158,6 @@ def main():
             compliance_checker()
     
     with col2:
-        # Quick stats and insights
-        st.markdown("### 📈 Quick Stats")
-        
-        if st.session_state.get('clause_text'):
-            clause_text = st.session_state.clause_text
-            
-            # Character count
-            char_count = len(clause_text)
-            st.metric("Characters", char_count)
-            
-            # Word count
-            word_count = len(clause_text.split())
-            st.metric("Words", word_count)
-            
-            # Estimated reading time
-            reading_time = max(1, word_count // 200)  # 200 words per minute
-            st.metric("Reading Time", f"{reading_time} min")
-            
-            # Risk level (if available)
-            if 'risk_analysis' in st.session_state:
-                risk_level = st.session_state.risk_analysis.get('risk_level', 'unknown')
-                confidence = st.session_state.risk_analysis.get('confidence', 0)
-                
-                if risk_level == 'high':
-                    st.error(f"🚨 {risk_level.upper()} RISK")
-                elif risk_level == 'medium':
-                    st.warning(f"⚠️ {risk_level.upper()} RISK")
-                else:
-                    st.success(f"✅ {risk_level.upper()} RISK")
-                
-                st.metric("Confidence", f"{confidence}%")
-            
-            # Metadata summary (if available)
-            if 'metadata' in st.session_state:
-                metadata = st.session_state.metadata
-                
-                st.markdown("### 📋 Key Details")
-                
-                if metadata.get('clause_type'):
-                    st.info(f"**Type:** {metadata['clause_type'].title()}")
-                
-                if metadata.get('effective_date'):
-                    st.info(f"**Date:** {metadata['effective_date']}")
-                
-                if metadata.get('contract_value'):
-                    st.info(f"**Value:** {metadata['contract_value']}")
-        
         # Sample clauses for quick testing
         st.markdown("### 🧪 Quick Test")
         st.markdown("Try these sample clauses:")
@@ -251,6 +180,31 @@ def main():
             
             # Add some spacing between samples
             st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Sample data download section
+        st.markdown("---")
+        st.markdown("### 📄 Sample Data")
+        st.markdown("""
+        Download comprehensive sample clauses for testing:
+        - 20+ clauses across all risk levels
+        - Compliance-focused examples
+        - Financial and time-based clauses
+        """)
+        
+        # Read the sample file and create download button
+        try:
+            with open('sample_clauses.md', 'r') as file:
+                sample_data = file.read()
+            
+            st.download_button(
+                label="📥 Download Sample Clauses",
+                data=sample_data,
+                file_name="sample_contract_clauses.md",
+                mime="text/markdown",
+                help="Download comprehensive sample clauses for testing"
+            )
+        except FileNotFoundError:
+            st.info("📄 Sample data file not found")
 
 if __name__ == "__main__":
     main() 
