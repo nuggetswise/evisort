@@ -18,8 +18,11 @@ class LLMClient:
         # Setup OpenAI (Priority 1)
         if self.config.get('openai_api_key'):
             try:
-                openai.api_key = self.config['openai_api_key']
-                self.clients['openai'] = openai
+                # No need to set global API key in new format
+                # Just verify the key works by creating a client
+                from openai import OpenAI
+                test_client = OpenAI(api_key=self.config['openai_api_key'])
+                self.clients['openai'] = test_client
                 st.success("✅ OpenAI client configured")
             except Exception as e:
                 st.warning(f"OpenAI client setup failed: {e}")
@@ -245,13 +248,16 @@ class LLMClient:
         return self._generate_mock_response(prompt, system_prompt)
     
     def _call_openai(self, prompt: str, system_prompt: str, model: str) -> str:
-        """Call OpenAI API."""
+        """Call OpenAI API using the new 1.0.0+ format."""
         messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
         
-        response = openai.ChatCompletion.create(
+        # Use the stored OpenAI client
+        client = self.clients['openai']
+        
+        response = client.chat.completions.create(
             model=model if model != "auto" else "gpt-4",
             messages=messages,
             max_tokens=1000,
