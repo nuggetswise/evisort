@@ -23,43 +23,39 @@ class LLMClient:
                 from openai import OpenAI
                 test_client = OpenAI(api_key=self.config['openai_api_key'])
                 self.clients['openai'] = test_client
-                st.success("✅ OpenAI client configured")
             except Exception as e:
-                st.warning(f"OpenAI client setup failed: {e}")
+                pass
         
         # Setup Cohere (Priority 2)
         if self.config.get('cohere_api_key'):
             try:
                 self.clients['cohere'] = cohere.Client(self.config['cohere_api_key'])
-                st.success("✅ Cohere client configured")
             except Exception as e:
-                st.warning(f"Cohere client setup failed: {e}")
+                pass
         
         # Setup Groq (Priority 3)
         if self.config.get('groq_api_key'):
             try:
                 import groq
                 self.clients['groq'] = groq.Groq(api_key=self.config['groq_api_key'])
-                st.success("✅ Groq client configured")
             except ImportError:
-                st.warning("Groq package not installed. Install with: pip install groq")
+                pass
             except Exception as e:
-                st.warning(f"Groq client setup failed: {e}")
+                pass
         
         # Setup Gemini (Priority 4)
         if self.config.get('gemini_api_key'):
             try:
                 genai.configure(api_key=self.config['gemini_api_key'])
                 self.clients['gemini'] = genai
-                st.success("✅ Gemini client configured")
             except Exception as e:
-                st.warning(f"Gemini client setup failed: {e}")
+                pass
         
         # Log available clients
         if self.clients:
-            st.info(f"🤖 Available AI providers: {', '.join(self.clients.keys())}")
+            pass  # Don't show client status messages
         else:
-            st.info("🤖 Running in demo mode (no API keys configured)")
+            pass  # Don't show demo mode message here
     
     def generate_response(self, prompt: str, system_prompt: str = "", model: str = "auto") -> str:
         """
