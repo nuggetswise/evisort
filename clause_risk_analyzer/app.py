@@ -53,6 +53,13 @@ st.markdown("""
         border-radius: 20px;
         font-weight: bold;
     }
+    .sample-button {
+        width: 60px !important;
+        height: 30px !important;
+        font-size: 12px !important;
+        padding: 4px 8px !important;
+        border-radius: 15px !important;
+    }
     .info-box {
         background: #e3f2fd;
         padding: 1rem;
@@ -125,6 +132,30 @@ def main():
         else:
             st.success("✅ **AI Mode**")
             st.markdown("Real AI analysis enabled!")
+        
+        # Sample data download link
+        st.markdown("### 📄 Sample Data")
+        st.markdown("""
+        Download comprehensive sample clauses for testing:
+        - 20+ clauses across all risk levels
+        - Compliance-focused examples
+        - Financial and time-based clauses
+        """)
+        
+        # Read the sample file and create download button
+        try:
+            with open('sample_clauses.md', 'r') as file:
+                sample_data = file.read()
+            
+            st.download_button(
+                label="📥 Download Sample Clauses",
+                data=sample_data,
+                file_name="sample_contract_clauses.md",
+                mime="text/markdown",
+                help="Download comprehensive sample clauses for testing"
+            )
+        except FileNotFoundError:
+            st.info("📄 Sample data file not found")
     
     # Main content area
     col1, col2 = st.columns([2, 1])
@@ -199,7 +230,7 @@ def main():
                     st.info(f"**Value:** {metadata['contract_value']}")
         
         # Sample clauses for quick testing
-        st.markdown("### 🧪 Sample Clauses")
+        st.markdown("### 🧪 Quick Test")
         st.markdown("Try these sample clauses:")
         
         sample_clauses = {
@@ -208,10 +239,18 @@ def main():
             "Low Risk - Confidentiality": "Both parties agree to maintain the confidentiality of any proprietary information shared during the course of this agreement. This obligation shall survive termination of the agreement."
         }
         
+        # Create smaller, more compact buttons
         for title, clause in sample_clauses.items():
-            if st.button(f"📝 {title}", key=f"sample_{title}"):
-                st.session_state.clause_text = clause
-                st.rerun()
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.markdown(f"**{title}**")
+            with col2:
+                if st.button("Try", key=f"sample_{title}", help=f"Load {title} sample"):
+                    st.session_state.clause_text = clause
+                    st.rerun()
+            
+            # Add some spacing between samples
+            st.markdown("<br>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main() 
