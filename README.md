@@ -1,20 +1,18 @@
-# 🧭 Workday PM Role Demo - Contract Intelligence
+# 🤖 ContractCopilot - AI-Powered Contract Intelligence
 
-**This repository has been reorganized! The main application is now in the `contractcopilot/` directory.**
+**Professional AI contract analysis platform demonstrating technical product management excellence.**
 
-## 🎯 **New Structure**
-
-The project has been reorganized into a clean, professional structure:
+## 🎯 **Project Structure**
 
 ```
 📁 contractcopilot/          # Main application directory
-├── app.py                   # ContractCopilot application (unified agentic pipeline)
-├── components/              # UI components (clause_input)
+├── app.py                   # Streamlit application with unified agentic pipeline
+├── agents.py               # AI agent pipeline (classify→retrieve→synthesize→propose)
+├── components/              # UI components (clause input, risk classifier, compliance checker)
 ├── utils/                   # Core utilities (LLM client, config)
-├── agents.py               # Agentic AI pipeline (classify→retrieve→synthesize→propose)
-├── assets/                  # Sample data
-├── docs/                    # Documentation
-└── README.md               # Comprehensive documentation
+├── assets/                  # Compliance contract templates (GDPR, CCPA, HIPAA)
+├── docs/                    # Technical documentation
+└── README.md               # Project documentation
 ```
 
 ## 🚀 **Quick Start**
@@ -26,72 +24,92 @@ cd contractcopilot
 # Install dependencies
 pip install -r requirements.txt
 
-# Set up API keys (at least one required)
-export OPENAI_API_KEY=sk-...      # or
-export COHERE_API_KEY=...         # or  
-export GROQ_API_KEY=...           # or
-export GEMINI_API_KEY=...
+# Configure API keys (required for AI analysis)
+# Option 1: Environment variables
+export GEMINI_API_KEY="your_gemini_api_key"
+export GROQ_API_KEY="your_groq_api_key"
+
+# Option 2: Streamlit secrets file (.streamlit/secrets.toml)
+GEMINI_API_KEY = "your_gemini_api_key"
+GROQ_API_KEY = "your_groq_api_key"
 
 # Run the application
 streamlit run app.py
 ```
 
-## 📋 **What's in ContractCopilot**
+## 📋 **Key Features**
 
 **ContractCopilot** is an AI-powered contract intelligence platform that demonstrates:
 
-- **🤖 Unified Agentic Pipeline**: Single "Run Agentic Analysis" CTA for both single clauses and multi-contract corpus
-- **🎯 Intent Classification**: Automatically detects QA, Extract, or Redline intent
-- **📊 Business Outcomes**: Next-step actions (Insert, Track, Export, Copy) tied to business value
+- **🤖 Agentic AI Pipeline**: Intelligent analysis with intent classification and grounded responses
+- **🎯 Multi-LLM Architecture**: Gemini (primary) + Groq (fallback) for reliability
+- **📊 Business Actions**: Insert safer clauses, create trackers, export decisions
 - **🔍 Explainability**: Citations with relevance scores and technical transparency
-- **🛡️ Governance**: Policy lens configuration, template governance, export capabilities
+- **🛡️ Compliance Focus**: GDPR, CCPA, HIPAA contract templates and analysis
 
-## 🎯 **For Hiring Managers**
+## 🎯 **Technical Excellence**
 
-This demo showcases the technical product management skills, AI/ML expertise, and strategic thinking required for the **Workday Contract Intelligence PM role**.
+This platform demonstrates advanced technical product management capabilities:
 
-**Key Demonstrations:**
-- ✅ **AI/ML Integration & Innovation**: Multi-LLM architecture with fallback strategies
-- ✅ **Technical Architecture & Scalability**: Modular design with agentic pipeline
-- ✅ **Legal Document Analysis & Business Value**: Risk assessment, compliance checking, safer clause proposals
-- ✅ **Product Strategy & Market Understanding**: Outcome-oriented design with business actions
-- ✅ **Alignment with Workday Values**: Professional presentation, governance focus, explainability
+- ✅ **AI/ML Integration**: Multi-LLM architecture with intelligent fallback strategies
+- ✅ **Technical Architecture**: Modular design with clean separation of concerns
+- ✅ **Legal Domain Expertise**: Risk assessment, compliance checking, safer clause proposals
+- ✅ **Product Strategy**: Outcome-oriented design with business value focus
+- ✅ **Professional Quality**: Production-ready code organization and documentation
 
-## 🚀 **Agentic Features**
+## 🚀 **How It Works**
 
-### **Unified Pipeline:**
-- **Input**: Paste clause or upload files (tabs interface)
-- **Configuration**: Optional policy lens (GDPR, CCPA, SOX, HIPAA, PCI-DSS)
-- **Analysis**: "Run Agentic Analysis" button triggers complete pipeline
-- **Output**: AI answer, citations, safer clause proposals, next-step actions
+### **Analysis Pipeline:**
+1. **Input**: Select from compliance contracts or paste custom text
+2. **Configuration**: Optional policy lens (GDPR, CCPA, HIPAA)
+3. **Analysis**: "Run Agentic Analysis" triggers intelligent pipeline
+4. **Output**: AI answer with citations and safer clause proposals
 
 ### **Business Actions:**
-- **📋 Insert Safer Clause**: Adds to revisions buffer
-- **📊 Create Tracker**: Creates tracking items for findings
-- **📄 Export Decision**: Downloads comprehensive reports
-- **📋 Copy Answer**: Copies analysis to clipboard
+- **📋 Insert Safer Clause**: Adds AI-generated clauses to revisions buffer
+- **📊 Create Tracker**: Creates tracking items for follow-up on findings
+- **📄 Export Decision**: Downloads comprehensive analysis reports
+- **📋 Copy Answer**: Copies analysis to clipboard for easy sharing
 
-### **Technical Excellence:**
-- **Intent Classification**: QA vs Extract vs Redline
-- **Retrieval**: BM25 with keyword fallback
-- **Synthesis**: Grounded answers with citations
-- **Proposal**: Governed template-based safer clauses
+### **Technical Architecture:**
+- **Intent Classification**: Automatically detects QA, Extract, or Redline intent
+- **Retrieval**: BM25 search with keyword fallback for relevant clauses
+- **Synthesis**: Grounded answers with citations and relevance scores
+- **Proposal**: Template-based safer clause generation
 
 ## 📖 **Documentation**
 
-- **Main README**: `contractcopilot/README.md` - Comprehensive project documentation
 - **Technical Docs**: `contractcopilot/docs/` - Architecture and strategy documentation
 - **Deployment**: `DEPLOYMENT.md` - Technical deployment guide
-- **Feedback**: `contractcopilot/feedback` - Implementation status and UX recommendations
+- **Sample Contracts**: `contractcopilot/assets/` - GDPR, CCPA, HIPAA compliance templates
 
-## 🔄 **Migration Notes**
+## 🔧 **API Configuration**
 
-The original scattered structure has been consolidated into a professional, organized codebase that demonstrates:
-- **Clean Architecture**: Modular design with clear separation of concerns
-- **Professional Documentation**: Comprehensive setup and usage guides
-- **Production-Ready Organization**: Scalable structure for enterprise deployment
-- **Agentic AI Implementation**: Modern AI architecture with business outcomes
+### **Required API Keys:**
+- **Gemini API Key**: https://makersuite.google.com/app/apikey (Primary)
+- **Groq API Key**: https://console.groq.com/ (Fallback)
+
+### **Configuration Methods:**
+1. **Environment Variables** (Recommended):
+   ```bash
+   export GEMINI_API_KEY="your_gemini_api_key"
+   export GROQ_API_KEY="your_groq_api_key"
+   ```
+
+2. **Streamlit Secrets** (`.streamlit/secrets.toml`):
+   ```toml
+   GEMINI_API_KEY = "your_gemini_api_key"
+   GROQ_API_KEY = "your_groq_api_key"
+   ```
+
+## 🎯 **For Demo Purposes**
+
+This platform demonstrates:
+- **Professional AI Integration**: Multi-LLM architecture with intelligent fallback
+- **Technical Product Management**: Clean architecture and modular design
+- **Legal Domain Expertise**: Contract analysis and compliance checking
+- **Business Value Focus**: Actionable insights and next-step recommendations
 
 ---
 
-**Navigate to `contractcopilot/` to explore the main application and comprehensive documentation.**
+**Ready to run! Navigate to `contractcopilot/` and start the application.**

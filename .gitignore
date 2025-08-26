@@ -54,4 +54,8 @@ Thumbs.db
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+
+# Strategy and deployment files
+contractcopilot/Strategy.md
+DEPLOYMENT.md 
