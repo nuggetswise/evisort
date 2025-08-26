@@ -1,1 +1,0 @@
-# Components package for Clause Risk Analyzer 

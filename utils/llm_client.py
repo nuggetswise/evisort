@@ -15,80 +15,93 @@ class LLMClient:
         """Initialize LLM clients based on available API keys."""
         self.clients = {}
         
-        # Setup OpenAI (Priority 1)
-        if self.config.get('openai_api_key'):
-            try:
-                # No need to set global API key in new format
-                # Just verify the key works by creating a client
-                from openai import OpenAI
-                test_client = OpenAI(api_key=self.config['openai_api_key'])
-                self.clients['openai'] = test_client
-            except Exception as e:
-                pass
-        
-        # Setup Cohere (Priority 2)
-        if self.config.get('cohere_api_key'):
-            try:
-                self.clients['cohere'] = cohere.Client(self.config['cohere_api_key'])
-            except Exception as e:
-                pass
-        
-        # Setup Groq (Priority 3)
+        # Setup Groq (Priority 1)
         if self.config.get('groq_api_key'):
             try:
                 import groq
                 self.clients['groq'] = groq.Groq(api_key=self.config['groq_api_key'])
             except ImportError:
                 pass
-            except Exception as e:
+            except Exception:
                 pass
         
-        # Setup Gemini (Priority 4)
+        # Setup Gemini (Priority 2)
         if self.config.get('gemini_api_key'):
             try:
                 genai.configure(api_key=self.config['gemini_api_key'])
                 self.clients['gemini'] = genai
-            except Exception as e:
+            except Exception:
                 pass
         
-        # Log available clients
-        if self.clients:
-            pass  # Don't show client status messages
-        else:
-            pass  # Don't show demo mode message here
+        # Setup OpenAI (Priority 3)
+        if self.config.get('openai_api_key'):
+            try:
+                from openai import OpenAI
+                test_client = OpenAI(api_key=self.config['openai_api_key'])
+                self.clients['openai'] = test_client
+            except Exception:
+                pass
+        
+        # Setup Cohere (Priority 4)
+        if self.config.get('cohere_api_key'):
+            try:
+                self.clients['cohere'] = cohere.Client(self.config['cohere_api_key'])
+            except Exception:
+                pass
     
     def generate_response(self, prompt: str, system_prompt: str = "", model: str = "auto") -> str:
         """
         Generate response using available LLM clients in priority order:
-        1. OpenAI
-        2. Cohere
-        3. Groq
-        4. Gemini
+        1. Groq (fastest)
+        2. Gemini
+        3. OpenAI
+        4. Cohere
         Falls back to mock responses if no API keys are available.
         """
         if self.config.get('demo_mode', True) or not self.clients:
             return self._generate_mock_response(prompt, system_prompt)
         
         # Try clients in priority order
-        client_order = ['openai', 'cohere', 'groq', 'gemini']
+        client_order = ['groq', 'gemini', 'openai', 'cohere']
         
         for client_name in client_order:
             if client_name in self.clients:
                 try:
-                    if client_name == 'openai':
-                        return self._call_openai(prompt, system_prompt, model)
-                    elif client_name == 'cohere':
-                        return self._call_cohere(prompt, system_prompt)
-                    elif client_name == 'groq':
+                    if client_name == 'groq':
                         return self._call_groq(prompt, system_prompt)
                     elif client_name == 'gemini':
                         return self._call_gemini(prompt, system_prompt)
-                except Exception as e:
-                    st.warning(f"Error with {client_name}: {e}")
+                    elif client_name == 'openai':
+                        return self._call_openai(prompt, system_prompt, model)
+                    elif client_name == 'cohere':
+                        return self._call_cohere(prompt, system_prompt)
+                except Exception:
                     continue
         
         # Fallback to mock response
         return self._generate_mock_response(prompt, system_prompt)
+    
+    def _call_groq(self, prompt: str, system_prompt: str) -> str:
+        """Call Groq API."""
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+        
+        response = self.clients['groq'].chat.completions.create(
+            model="llama3-8b-8192",  # Fast and reliable model
+            messages=messages,
+            max_tokens=1000,
+            temperature=0.7
+        )
+        return response.choices[0].message.content
+    
+    def _call_gemini(self, prompt: str, system_prompt: str) -> str:
+        """Call Gemini API."""
+        model = genai.GenerativeModel('gemini-pro')
+        full_prompt = f"{system_prompt}\n\n{prompt}" if system_prompt else prompt
+        response = model.generate_content(full_prompt)
+        return response.text
     
     def _call_openai(self, prompt: str, system_prompt: str, model: str) -> str:
         """Call OpenAI API using the new 1.0.0+ format."""
@@ -117,28 +130,6 @@ class LLMClient:
             temperature=0.7
         )
         return response.generations[0].text
-    
-    def _call_groq(self, prompt: str, system_prompt: str) -> str:
-        """Call Groq API."""
-        messages = []
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-        messages.append({"role": "user", "content": prompt})
-        
-        response = self.clients['groq'].chat.completions.create(
-            model="llama3-8b-8192",  # Fast and reliable model
-            messages=messages,
-            max_tokens=1000,
-            temperature=0.7
-        )
-        return response.choices[0].message.content
-    
-    def _call_gemini(self, prompt: str, system_prompt: str) -> str:
-        """Call Gemini API."""
-        model = genai.GenerativeModel('gemini-pro')
-        full_prompt = f"{system_prompt}\n\n{prompt}" if system_prompt else prompt
-        response = model.generate_content(full_prompt)
-        return response.text
     
     def _generate_mock_response(self, prompt: str, system_prompt: str) -> str:
         """Generate mock responses for demo purposes."""

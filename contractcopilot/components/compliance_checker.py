@@ -2,8 +2,7 @@ import streamlit as st
 import sys
 import os
 
-# Add the parent directory to the path to import utils
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Import from utils
 from utils.llm_client import LLMClient
 
 def compliance_checker():
