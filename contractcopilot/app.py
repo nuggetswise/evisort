@@ -339,6 +339,17 @@ def main():
                     st.markdown("---")
                     st.markdown("### 🎯 Next Actions")
                     
+                    # Action descriptions
+                    st.markdown("""
+                    **📋 Insert Safer Clause**: Adds the AI-generated safer clause to your revisions buffer for later review and implementation. This creates a draft version that you can modify before applying to your contract.
+                    
+                    **📊 Create Tracker**: Creates a tracking item in your workflow management system to follow up on this analysis finding. This helps ensure the identified risks or compliance issues are addressed in your contract review process.
+                    
+                    **📄 Export Decision**: Downloads a comprehensive report of the analysis including the AI answer, intent classification, pipeline steps, citations, and any safer clause proposals. Perfect for sharing with stakeholders or adding to your contract documentation.
+                    
+                    **📋 Copy Answer**: Copies the AI analysis answer to your clipboard for easy pasting into other documents, emails, or contract management systems.
+                    """)
+                    
                     col1, col2, col3, col4 = st.columns(4)
                     with col1:
                         if result['proposal']:
