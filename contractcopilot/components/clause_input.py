@@ -24,6 +24,21 @@ def clause_input():
     
     # Store in session state for other components
     if clause_text:
+        # Check if text has changed from previous analysis
+        previous_text = st.session_state.get('previous_clause_text', '')
+        if clause_text != previous_text:
+            # Clear previous analysis results when text changes
+            if 'risk_analysis' in st.session_state:
+                del st.session_state.risk_analysis
+            if 'compliance_analysis' in st.session_state:
+                del st.session_state.compliance_analysis
+            if 'risk_clicked' in st.session_state:
+                del st.session_state.risk_clicked
+            if 'compliance_clicked' in st.session_state:
+                del st.session_state.compliance_clicked
+            # Update previous text
+            st.session_state.previous_clause_text = clause_text
+        
         st.session_state.clause_text = clause_text
     
     # Character count

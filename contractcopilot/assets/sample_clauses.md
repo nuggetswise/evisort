@@ -1,6 +1,5 @@
 # 📄 Sample Contract Clauses
 
-These sample clauses are provided for quick testing with the **🧩 Single Clause** analyzer and the **🔎 Ask AI (Corpus)** agent.
 
 ---
 
@@ -9,8 +8,7 @@ Both parties agree to maintain the confidentiality of any proprietary informatio
 
 ---
 
-## ⚖️ Indemnification (High Risk)
-The Client shall indemnify, defend, and hold harmless the Provider against any and all claims, damages, losses, and expenses, including attorneys' fees, arising from or relating to the Client's use of the services, regardless of the cause.
+## ⚖️ Indemnification The Client shall indemnify, defend, and hold harmless the Provider against any and all claims, damages, losses, and expenses, including attorneys' fees, arising from or relating to the Client's use of the services, regardless of the cause.
 
 ---
 

@@ -137,21 +137,9 @@ def main():
         3. Get AI answers with citations and safer clause suggestions
         """)
         
-        # Demo mode indicator
-        if st.session_state.config.get('demo_mode', True):
-            st.warning("🤖 **Demo Mode**")
-            st.markdown("""
-            Currently running with mock responses.
-            
-            To enable real AI analysis, add your API keys:
-            - OpenAI API Key
-            - Cohere API Key
-            - Groq API Key
-            - Gemini API Key
-            """)
-        else:
-            st.success("✅ **AI Mode**")
-            st.markdown("Real AI analysis enabled!")
+        # API Status
+        st.success("✅ **AI Mode**")
+        st.markdown("Real AI analysis enabled!")
 
     # Main content area
     st.subheader("🤖 Ask AI - Contract Intelligence")

@@ -33,6 +33,9 @@ def compliance_checker():
     
     # Check compliance button
     if st.button("🔍 Check Compliance", type="secondary"):
+        # Mark that compliance button was clicked
+        st.session_state.compliance_clicked = True
+        
         with st.spinner("Analyzing compliance requirements..."):
             try:
                 # Get compliance analysis from LLM
@@ -86,27 +89,9 @@ def compliance_checker():
                 
             except Exception as e:
                 st.error(f"Error during compliance analysis: {e}")
-                st.info("Falling back to demo mode...")
-                
-                # Fallback to mock analysis
-                compliance_analysis = llm_client._generate_mock_compliance_analysis(clause_text, frameworks)
-                st.session_state.compliance_analysis = compliance_analysis
-                
-                # Display fallback results
-                st.markdown("### 📋 Compliance Assessment (Demo Mode)")
-                st.info("**Overall Compliance Score: 75%**")
-                
-                st.markdown("### 🏛️ Framework Analysis")
-                for framework, description in frameworks.items():
-                    with st.expander(f"{framework} - {description}", expanded=False):
-                        st.warning("⚠️ Partial")
-                        st.markdown("**Issues Found:**")
-                        st.markdown("• Standard compliance review required")
-                        st.markdown("**Recommendations:**")
-                        st.markdown("• Review with legal counsel")
     
-    # Display previous results if available
-    elif 'compliance_analysis' in st.session_state:
+    # Display previous results only if button was clicked and analysis exists
+    elif 'compliance_analysis' in st.session_state and st.session_state.get('compliance_clicked', False):
         compliance_analysis = st.session_state.compliance_analysis
         
         st.markdown("### 📋 Compliance Assessment")
@@ -120,14 +105,6 @@ def compliance_checker():
             st.error(f"🚨 **Overall Compliance Score: {overall_score}%**")
         
         st.markdown("### 🏛️ Framework Analysis")
-        
-        frameworks = {
-            "GDPR": "General Data Protection Regulation",
-            "CCPA": "California Consumer Privacy Act", 
-            "SOX": "Sarbanes-Oxley Act",
-            "HIPAA": "Health Insurance Portability and Accountability Act",
-            "PCI-DSS": "Payment Card Industry Data Security Standard"
-        }
         
         for framework, description in frameworks.items():
             framework_data = compliance_analysis.get('frameworks', {}).get(framework, {})
@@ -152,8 +129,4 @@ def compliance_checker():
                 if recommendations:
                     st.markdown("**Recommendations:**")
                     for rec in recommendations:
-                        st.markdown(f"• {rec}")
-    
-    # Show demo mode indicator
-    if st.session_state.get('config', {}).get('demo_mode', True):
-        st.info("🤖 **Demo Mode**: Using AI-powered compliance analysis with fallback responses.") 
+                        st.markdown(f"• {rec}") 

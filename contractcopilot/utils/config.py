@@ -43,6 +43,10 @@ def load_config() -> Dict[str, Any]:
         config['gemini_api_key']
     ])
     
-    config['demo_mode'] = not has_api_keys
+    # Require API keys - no demo mode
+    if not has_api_keys:
+        raise Exception("No API keys found. Please add at least one API key (OpenAI, Cohere, Groq, or Gemini).")
+    
+    config['demo_mode'] = False
     
     return config 

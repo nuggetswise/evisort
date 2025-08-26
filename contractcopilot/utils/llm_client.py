@@ -104,8 +104,8 @@ class LLMClient:
         except json.JSONDecodeError:
             pass
         
-        # Fallback to mock response if JSON parsing fails
-        return self._generate_mock_risk_analysis(clause_text)
+        # If JSON parsing fails, raise an error
+        raise Exception("Failed to parse AI response. Please try again.")
     
     def extract_metadata(self, clause_text: str) -> Dict[str, Any]:
         """
@@ -149,8 +149,8 @@ class LLMClient:
         except json.JSONDecodeError:
             pass
         
-        # Fallback to mock response if JSON parsing fails
-        return self._generate_mock_metadata(clause_text)
+        # If JSON parsing fails, raise an error
+        raise Exception("Failed to parse AI response. Please try again.")
     
     def analyze_compliance(self, clause_text: str, frameworks: Dict[str, str]) -> Dict[str, Any]:
         """
@@ -207,8 +207,8 @@ class LLMClient:
         except json.JSONDecodeError:
             pass
         
-        # Fallback to mock response if JSON parsing fails
-        return self._generate_mock_compliance_analysis(clause_text, frameworks)
+        # If JSON parsing fails, raise an error
+        raise Exception("Failed to parse AI response. Please try again.")
     
     def generate_response(self, prompt: str, system_prompt: str = "", model: str = "auto") -> str:
         """
@@ -217,10 +217,9 @@ class LLMClient:
         2. Cohere
         3. Groq
         4. Gemini
-        Falls back to mock responses if no API keys are available.
         """
-        if self.config.get('demo_mode', True) or not self.clients:
-            return self._generate_mock_response(prompt, system_prompt)
+        if not self.clients:
+            raise Exception("No LLM clients available. Please add an API key.")
         
         # Try clients in priority order
         client_order = ['openai', 'cohere', 'groq', 'gemini']
@@ -240,8 +239,7 @@ class LLMClient:
                     st.warning(f"Error with {client_name}: {e}")
                     continue
         
-        # Fallback to mock response
-        return self._generate_mock_response(prompt, system_prompt)
+        raise Exception("All LLM clients failed. Please check your API keys.")
     
     def _call_openai(self, prompt: str, system_prompt: str, model: str) -> str:
         """Call OpenAI API using the new 1.0.0+ format."""
@@ -288,111 +286,14 @@ class LLMClient:
     
     def _call_gemini(self, prompt: str, system_prompt: str) -> str:
         """Call Gemini API."""
-        model = genai.GenerativeModel('gemini-pro')
+        # Use the latest Gemini models
+        try:
+            model = genai.GenerativeModel('gemini-2.5-pro')
+        except Exception:
+            model = genai.GenerativeModel('gemini-2.5-flash')
+        
         full_prompt = f"{system_prompt}\n\n{prompt}" if system_prompt else prompt
         response = model.generate_content(full_prompt)
         return response.text
     
-    def _generate_mock_response(self, prompt: str, system_prompt: str) -> str:
-        """Generate mock responses for demo purposes."""
-        return """
-        {
-            "risk_level": "medium",
-            "confidence": 75,
-            "explanation": "This clause contains standard legal provisions that require careful review.",
-            "key_risks": ["Standard legal terms", "Requires review"],
-            "recommendations": ["Review against company policies", "Ensure compliance"],
-            "clause_type": "general"
-        }
-        """
-    
-    def _generate_mock_risk_analysis(self, clause_text: str) -> Dict[str, Any]:
-        """Generate mock risk analysis for demo purposes."""
-        clause_lower = clause_text.lower()
-        
-        if 'indemnify' in clause_lower or 'unlimited' in clause_lower:
-            return {
-                "risk_level": "high",
-                "confidence": 90,
-                "explanation": "This clause contains high-risk indemnification language that could expose your organization to unlimited liability.",
-                "key_risks": ["Unlimited liability", "Broad indemnification", "Financial exposure"],
-                "recommendations": ["Immediate legal review required", "Negotiate liability caps", "Limit indemnification scope"],
-                "clause_type": "indemnification"
-            }
-        elif 'termination' in clause_lower or 'payment' in clause_lower:
-            return {
-                "risk_level": "medium",
-                "confidence": 80,
-                "explanation": "This clause contains standard business terms that require review against company policies.",
-                "key_risks": ["Business continuity", "Cash flow impact", "Operational considerations"],
-                "recommendations": ["Review against policies", "Ensure alignment with business needs", "Document concerns"],
-                "clause_type": "termination" if 'termination' in clause_lower else "payment"
-            }
-        else:
-            return {
-                "risk_level": "low",
-                "confidence": 70,
-                "explanation": "This clause contains standard legal provisions that present minimal risk to your organization.",
-                "key_risks": ["Standard terms", "Minimal risk"],
-                "recommendations": ["Standard review", "No immediate action required"],
-                "clause_type": "general"
-            }
-    
-    def _generate_mock_metadata(self, clause_text: str) -> Dict[str, Any]:
-        """Generate mock metadata for demo purposes."""
-        return {
-            "effective_date": None,
-            "termination_notice": None,
-            "contract_value": None,
-            "liability_cap": None,
-            "payment_terms": None,
-            "clause_type": "general",
-            "parties_mentioned": [],
-            "jurisdiction": "Not specified"
-        }
-    
-    def _generate_mock_compliance_analysis(self, clause_text: str, frameworks: Dict[str, str]) -> Dict[str, Any]:
-        """Generate mock compliance analysis for demo purposes."""
-        clause_lower = clause_text.lower()
-        
-        # Simple keyword-based compliance checking
-        compliance_data = {
-            "overall_score": 75,
-            "frameworks": {}
-        }
-        
-        for framework, description in frameworks.items():
-            if framework == "GDPR":
-                if 'personal data' in clause_lower or 'privacy' in clause_lower:
-                    compliance_data["frameworks"][framework] = {
-                        "compliance_level": "Partial",
-                        "issues": ["Data processing terms need review"],
-                        "recommendations": ["Add explicit consent mechanisms", "Include data subject rights"]
-                    }
-                else:
-                    compliance_data["frameworks"][framework] = {
-                        "compliance_level": "Compliant",
-                        "issues": [],
-                        "recommendations": ["Standard review recommended"]
-                    }
-            elif framework == "CCPA":
-                if 'california' in clause_lower or 'consumer' in clause_lower:
-                    compliance_data["frameworks"][framework] = {
-                        "compliance_level": "Partial",
-                        "issues": ["California-specific terms identified"],
-                        "recommendations": ["Review CCPA compliance requirements"]
-                    }
-                else:
-                    compliance_data["frameworks"][framework] = {
-                        "compliance_level": "Compliant",
-                        "issues": [],
-                        "recommendations": ["Standard review recommended"]
-                    }
-            else:
-                compliance_data["frameworks"][framework] = {
-                    "compliance_level": "Partial",
-                    "issues": ["Standard compliance review required"],
-                    "recommendations": ["Review with legal counsel", "Ensure framework-specific requirements"]
-                }
-        
-        return compliance_data 
+ 
