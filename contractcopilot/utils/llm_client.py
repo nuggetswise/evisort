@@ -63,8 +63,11 @@ class LLMClient:
         """
         system_prompt = """
         You are an expert legal analyst specializing in contract risk assessment. 
-        Analyze the provided contract clause and return a JSON response with the following structure:
+        Analyze the provided contract clause and return ONLY a valid JSON response.
         
+        IMPORTANT: Return ONLY the JSON object, no additional text, explanations, or markdown formatting.
+        
+        Required JSON structure:
         {
             "risk_level": "high|medium|low",
             "confidence": 85,
@@ -158,8 +161,11 @@ class LLMClient:
         """
         system_prompt = """
         You are an expert compliance analyst specializing in regulatory frameworks. 
-        Analyze the provided contract clause against multiple compliance frameworks and return a JSON response:
+        Analyze the provided contract clause against multiple compliance frameworks and return ONLY a valid JSON response.
         
+        IMPORTANT: Return ONLY the JSON object, no additional text, explanations, or markdown formatting.
+        
+        Required JSON structure:
         {
             "overall_score": 85,
             "frameworks": {
@@ -191,24 +197,37 @@ class LLMClient:
         
         Clause: "{clause_text}"
         
-        Return only valid JSON with the specified structure.
+        Return ONLY valid JSON with the specified structure. No additional text or formatting.
         """
         
         response = self.generate_response(user_prompt, system_prompt)
         
         # Try to parse JSON response
         try:
-            json_start = response.find('{')
-            json_end = response.rfind('}') + 1
-            if json_start != -1 and json_end != 0:
-                json_str = response[json_start:json_end]
-                result = json.loads(json_str)
-                return result
+            # Clean the response - remove any markdown formatting
+            cleaned_response = response.strip()
+            if cleaned_response.startswith('```json'):
+                cleaned_response = cleaned_response[7:]
+            if cleaned_response.endswith('```'):
+                cleaned_response = cleaned_response[:-3]
+            cleaned_response = cleaned_response.strip()
+            
+            # Try direct parsing first
+            result = json.loads(cleaned_response)
+            return result
         except json.JSONDecodeError:
-            pass
-        
-        # If JSON parsing fails, raise an error
-        raise Exception("Failed to parse AI response. Please try again.")
+            # Try to extract JSON from response
+            try:
+                json_start = response.find('{')
+                json_end = response.rfind('}') + 1
+                if json_start != -1 and json_end != 0:
+                    json_str = response[json_start:json_end]
+                    result = json.loads(json_str)
+                    return result
+            except json.JSONDecodeError as e:
+                st.error(f"JSON parsing failed. Response: {response[:200]}...")
+                st.error(f"JSON error: {e}")
+                raise Exception("Failed to parse AI response. Please try again.")
     
     def generate_response(self, prompt: str, system_prompt: str = "", model: str = "auto") -> str:
         """

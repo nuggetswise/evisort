@@ -1,0 +1,91 @@
+✅ IMPLEMENTED: Great question. Make the call-to-action crystal clear and outcome-oriented so a reviewer instantly sees what the agent does and what they can do next.
+
+✅ IMPLEMENTED: What the CTA should be
+
+✅ IMPLEMENTED: Use one primary CTA everywhere:
+
+✅ IMPLEMENTED: Primary CTA (both modes):
+"Run Agentic Analysis"
+
+✅ IMPLEMENTED: Then adapt the sub-label to the input source:
+	•	Single clause: "(Single Clause)"
+	•	Uploaded files: "(Corpus)"
+
+✅ IMPLEMENTED: What we're analyzing (in one sentence)
+
+✅ IMPLEMENTED: We take your clause or corpus, detect the user's intent, retrieve the most relevant clauses, synthesize a grounded answer with citations, and—when appropriate—propose a safer clause you can insert.
+
+✅ IMPLEMENTED: Buttons & flow (so it shows your PM thinking)
+
+✅ IMPLEMENTED: Before run
+	•	Text area (Single Clause) / Uploader + optional question (Corpus)
+	•	Optional "Policy Lens" dropdown (GDPR, CCPA, HIPAA, etc.)
+
+✅ IMPLEMENTED: Primary: Run Agentic Analysis
+✅ IMPLEMENTED: Helper copy (one line): "Classify → Retrieve → Synthesize → Propose (with citations)."
+
+✅ IMPLEMENTED: After run (global actions)
+	•	Insert Safer Clause (writes proposed clause into a "Revisions" buffer)
+	•	Create Tracker from this Finding (pre-fill field like Renewal Notice, Liability Cap)
+	•	Export Decision Record (answer + citations + proposed clause → Markdown/PDF)
+	•	Copy Answer (plain text)
+
+✅ IMPLEMENTED: After run (per-citation actions)
+	•	Analyze Inline (quick metadata on that clause)
+	•	Open in Single Clause (deep dive on that one clause)
+	•	Insert This Clause (if you want to keep the original clause for comparison)
+
+✅ IMPLEMENTED: Microcopy to put right under the CTA
+	•	"Grounded in retrieved clauses; every answer includes citations."
+	•	"Safer clause proposals use governed templates (no free-form drafting)."
+
+✅ IMPLEMENTED: Dynamic CTA label (optional polish)
+
+✅ IMPLEMENTED: If you want the button to reflect detected intent, switch the label after classification:
+	•	Intent = qa → "Run Agentic Analysis"
+	•	Intent = extract → "Extract & Summarize"
+	•	Intent = redline → "Propose Safer Clause"
+
+✅ IMPLEMENTED: (You can show the detected intent as a tiny caption: "Intent: qa → Steps: classify → retrieve → synthesize".)
+
+✅ IMPLEMENTED: What exactly is analyzed (bullet points you can show in UI)
+	•	Intent: QA vs. Extract vs. Redline
+	•	Retrieval: Top-k clauses from the clause index (BM25 now; vectors later)
+	•	Synthesis: Concise 2–4 sentence answer with [n] citations
+	•	Proposal (when applicable): Curated safer clause (liability / indemnity / renewal / notice)
+	•	Optional lens: Compliance hints (GDPR/CCPA/HIPAA…) appended to the plan
+
+✅ IMPLEMENTED: Minimal labels you can drop into the app now
+	•	Header: 🤖 Agentic Analysis (Single Clause | Corpus)
+	•	Primary button: Run Agentic Analysis
+	•	Sections post-run: AI Answer, Citations, Suggested Safer Clause, Next Actions
+	•	Next Actions buttons: Insert Safer Clause · Create Tracker · Export Decision Record · Copy Answer
+
+✅ IMPLEMENTED: This keeps everything consistent (no "Ask AI" vs "Agentic" split), shows your product thinking (next-step actions tied to business outcomes), and demonstrates explainability (citations) and governance (templates, trackers, export).
+
+---
+
+## 🎉 IMPLEMENTATION STATUS: COMPLETE
+
+All feedback recommendations have been successfully implemented:
+
+### ✅ Core Features:
+- Single unified CTA: "Run Agentic Analysis"
+- Dynamic intent-based labeling
+- Policy lens configuration
+- Per-citation actions
+- Next-step business actions
+- Technical details with governance focus
+
+### ✅ UI/UX Improvements:
+- Consistent agentic pipeline
+- Professional microcopy
+- Business outcome focus
+- Explainability with citations
+- Governance features (templates, trackers, export)
+
+### ✅ Product Thinking Demonstrated:
+- Outcome-oriented design
+- Next-step actions tied to business value
+- Explainability and transparency
+- Professional presentation for hiring managers

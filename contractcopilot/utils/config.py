@@ -5,14 +5,13 @@ from typing import Dict, Any
 def load_config() -> Dict[str, Any]:
     """
     Load configuration from Streamlit secrets or environment variables.
-    Falls back to mock data for demo purposes.
+    Requires at least one API key for real AI analysis.
     """
     config = {
         'openai_api_key': None,
         'cohere_api_key': None,
         'groq_api_key': None,
-        'gemini_api_key': None,
-        'demo_mode': True
+        'gemini_api_key': None
     }
     
     # Try to load from Streamlit secrets
